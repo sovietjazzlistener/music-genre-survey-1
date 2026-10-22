@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="클래식과 재즈의 감상·연주 일치도를 조사하고 실시간 결과와 맞춤 음악을 추천합니다." />
+  <title>음악 감상·연주 일치도 설문</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <div class="hero-note">MUSIC SURVEY <span aria-hidden="true">✦</span> CLASSICAL & JAZZ</div>
+      <h1>내가 듣는 음악,<br /><em>내가 연주하는 음악</em></h1>
+      <p>평소 즐겨 듣는 장르와 실제 연주하는 장르는 얼마나 일치할까요?<br />설문에 참여하고 다른 응답자들의 결과를 확인해 보세요.</p>
+      <div class="hero-pills"><span>2개 질문</span><span>5점 리커트 척도</span><span>실시간 결과</span></div>
+    </header>
+
+    <section class="card survey" aria-labelledby="survey-title">
+      <div class="section-title">
+        <div><span class="eyebrow">01 / PARTICIPATE</span><h2 id="survey-title">설문에 참여하기</h2></div>
+        <span class="section-symbol" aria-hidden="true">♫</span>
+      </div>
+      <form id="survey-form" novalidate>
+        <fieldset>
+          <legend><span class="qnum">Q1</span> 어떤 장르의 음악을 가장 즐겨 듣습니까?</legend>
+          <div class="genre-choices">
+            <label class="genre-card"><input type="radio" name="genre" value="classical" /><span class="genre-icon" aria-hidden="true">♬</span><strong>클래식</strong><small>CLASSICAL</small></label>
+            <label class="genre-card"><input type="radio" name="genre" value="jazz" /><span class="genre-icon" aria-hidden="true">♪</span><strong>재즈</strong><small>JAZZ</small></label>
+          </div>
+        </fieldset>
+        <fieldset class="scale-fieldset">
+          <legend><span class="qnum">Q2</span> 나는 즐겨 듣는 음악과 주로 연주하는 음악의 장르가 일치한다.</legend>
+          <p class="hint">동의하는 정도를 1점부터 5점까지 선택해 주세요.</p>
+          <div class="scale-choices" role="group" aria-label="감상과 연주 장르 일치도">
+            <label class="scale-card"><input type="radio" name="agreement" value="1" /><span class="scale-number">1</span><span>전혀 그렇지 않다</span></label>
+            <label class="scale-card"><input type="radio" name="agreement" value="2" /><span class="scale-number">2</span><span>그렇지 않다</span></label>
+            <label class="scale-card"><input type="radio" name="agreement" value="3" /><span class="scale-number">3</span><span>보통이다</span></label>
+            <label class="scale-card"><input type="radio" name="agreement" value="4" /><span class="scale-number">4</span><span>그렇다</span></label>
+            <label class="scale-card"><input type="radio" name="agreement" value="5" /><span class="scale-number">5</span><span>매우 그렇다</span></label>
+          </div>
+        </fieldset>
+        <button type="submit" class="primary-button" id="submit-button">설문 제출하고 결과 확인하기 <span aria-hidden="true">→</span></button>
+        <p id="submit-status" class="status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section id="recommendation" class="card recommendation hidden" aria-labelledby="recommendation-title" aria-live="polite">
+      <span class="eyebrow">JUST FOR YOU</span>
+      <h2 id="recommendation-title">당신을 위한 음악을 추천해드립니다!!!</h2>
+      <p id="recommendation-copy"></p>
+      <a class="recommend-link" id="recommendation-link" href="#" target="_blank" rel="noopener noreferrer">추천 음악 보러 가기 ↗</a>
+    </section>
+
+    <section class="results" aria-labelledby="results-title">
+      <div class="section-title results-heading">
+        <div><span class="eyebrow">02 / LIVE RESULTS</span><h2 id="results-title">전체 설문 결과</h2></div>
+        <button type="button" id="refresh-button" class="refresh-button">↻ 새로고침</button>
+      </div>
+      <p class="results-desc">응답이 저장되면 그래프가 바로 갱신됩니다. 다른 사람이 제출한 결과도 자동으로 반영됩니다.</p>
+      <div class="metric-grid">
+        <div class="metric"><span>총 응답자</span><strong id="total-count">—</strong><small>명</small></div>
+        <div class="metric"><span>클래식 응답자</span><strong id="classical-count">—</strong><small>명</small></div>
+        <div class="metric"><span>재즈 응답자</span><strong id="jazz-count">—</strong><small>명</small></div>
+      </div>
+      <div class="chart-grid">
+        <article class="card chart-card">
+          <h3>장르별 일치 비율</h3>
+          <p>일치도에서 4점 또는 5점을 선택한 비율 (%)</p>
+          <div class="chart-area"><canvas id="rate-chart" role="img" aria-label="클래식과 재즈의 감상 및 연주 장르 일치 비율 막대 그래프"></canvas></div>
+          <p id="rate-caption" class="chart-caption">결과를 불러오는 중입니다.</p>
+        </article>
+        <article class="card chart-card">
+          <h3>장르별 평균 일치도</h3>
+          <p>각 집단이 선택한 점수의 평균 (1~5점)</p>
+          <div class="chart-area"><canvas id="average-chart" role="img" aria-label="클래식과 재즈의 감상 및 연주 장르 평균 일치도 막대 그래프"></canvas></div>
+          <p id="average-caption" class="chart-caption">결과를 불러오는 중입니다.</p>
+        </article>
+      </div>
+      <p id="results-status" class="status" role="status" aria-live="polite"></p>
+      <p class="footnote">※ 일치 비율은 실제 연주 장르를 검증한 수치가 아니라, 4~5점으로 답한 사람의 비율입니다.</p>
+    </section>
+
+    <section class="card about" aria-labelledby="about-title">
+      <span class="eyebrow">03 / ABOUT THIS SURVEY</span>
+      <h2 id="about-title">이 설문에 대하여</h2>
+      <h3>문항을 선택한 이유</h3>
+      <p>사람들이 즐겨 듣는 음악과 실제로 연주하는 음악의 장르는 반드시 일치하지 않을 수 있다. 이를 알아보기 위해 클래식과 재즈 중 선호하는 장르를 집단 구분 변수로 설정하고, 감상 장르와 연주 장르의 일치 정도를 5점 리커트 척도로 측정하도록 설계하였다.</p>
+      <h3>자신만의 추가 기능 요소와 그 이유</h3>
+      <p>응답자가 자신의 음악 취향을 확장하고 새로운 음악을 발견할 기회를 제공하고자 하였다. 따라서 설문 응답자가 선택한 음악 장르와 일치도 점수에 따라 맞춤형 음악 추천 링크를 제공하는 기능을 추가하였다.</p>
+    </section>
+    <footer class="footer">MUSIC SURVEY · CLASSICAL / JAZZ · SUPABASE + GITHUB PAGES</footer>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+  <script src="./config.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
